@@ -191,3 +191,73 @@ ORDER BY salary DESC;
 
 ```
 
+
+
+
+# sqlAssignment 4
+
+
+```sql
+CREATE TABLE leaders (
+  leader_id   INT PRIMARY KEY,
+  leader_name VARCHAR(30) NOT NULL
+);
+
+
+INSERT INTO leaders (leader_id, leader_name) VALUES
+  (7839, 'KING'),   -- PRESIDENT
+  (7698, 'BLAKE'),  -- MANAGER
+  (7782, 'CLARK'),  -- MANAGER
+  (7566, 'JONES'),  -- MANAGER
+  (7902, 'FORD'),   -- ANALYST (manages SMITH)
+  (7788, 'SCOTT');  -- ANALYST (manages ADAMS)
+
+
+CREATE TABLE employees_leaders (
+  employee_number INT NOT NULL,
+  leader_id       INT NOT NULL,
+  PRIMARY KEY (employee_number, leader_id),
+  CONSTRAINT fk_el_employee
+    FOREIGN KEY (employee_number) REFERENCES employees(employee_number)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT fk_el_leader
+    FOREIGN KEY (leader_id) REFERENCES leaders(leader_id)
+    ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+
+
+INSERT INTO employees_leaders VALUES
+  (7499, 7698), (7499, 7839); 
+  
+
+
+INSERT INTO employees_leaders VALUES
+  (7698, 7839);                
+
+
+INSERT INTO employees_leaders VALUES
+  (7782, 7839),                
+  (7934, 7782);                
+
+
+INSERT INTO employees_leaders VALUES
+  (7566, 7839),                
+  (7788, 7566);              
+
+
+SELECT e.employee_name AS employee,
+       l.leader_name   AS leader
+FROM employees e
+JOIN employees_leaders el
+  ON e.employee_number = el.employee_number
+JOIN leaders l
+  ON el.leader_id = l.leader_id
+ORDER BY e.employee_name, l.leader_name;
+
+
+
+
+
+
+```
